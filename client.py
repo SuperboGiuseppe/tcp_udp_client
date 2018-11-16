@@ -1,3 +1,6 @@
+import sys
+import TCP_Connection as tcp
 
-def main(host_address, host_port):
-    connection(host_address, host_port)
+host_address = sys.argv[1]
+host_port = sys.argv[2]
+tcp.connection(host_address, host_port)
