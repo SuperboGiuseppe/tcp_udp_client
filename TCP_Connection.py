@@ -1,7 +1,7 @@
 import socket
 
 def create_socket():
-	s = socket.socket()
+	s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 	return s
 
 def connection(host_address, host_port, s):
@@ -22,6 +22,7 @@ def connection(host_address, host_port, s):
 	handshake = s.recv(1024)
 	
 	return handshake.decode()
+
 
 
 
