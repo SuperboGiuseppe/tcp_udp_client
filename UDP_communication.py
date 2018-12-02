@@ -14,7 +14,7 @@ def send_message(CID, UDP_port, host_address, s):
 	data_remaining = 0
 	length = len(message)
 	print(int(UDP_port))
-	data = struct.pack('!s??iis', bytes(CID, 'utf-8'), ack, eom, data_remaining, length, bytes(message, 'utf-8'))
+	data = struct.pack('!8s??HH64s', bytes(CID, 'utf-8'), ack, eom, data_remaining, length, bytes(message, 'utf-8'))
 	s.sendto(data, (host_address, int(UDP_port)))
 
 def received_data(s):
