@@ -25,6 +25,8 @@ def received_data(s, key):
     received_package = struct.unpack('!8s??HH64s', s.recv(1024))
     EOM = received_package[2]
     received_message = received_package[5]
+    #print(received_message)
+    #print(key)
     received_message = received_message.decode('UTF-8')
     received_message = received_message.rstrip('h\00')
     if EOM is not True:
