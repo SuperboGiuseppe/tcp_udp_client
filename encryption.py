@@ -12,6 +12,11 @@ def randomKey():
     
     return key
 
+    '''
+    Create a random key for encryption
+    :return a 64 byte strings of hexadecimal characters
+    '''
+
 def createKeys():
 
     keys = ""
@@ -25,6 +30,11 @@ def createKeys():
     keys += ".\r\n"
 
     return keys
+
+    '''
+    Create a string with the 20 'client' keys for encryption with the format one key per line and the dot at the end
+    :return a string of 20 'client' keys for encryption to send to the server
+    '''
 
 def splitKeys(keys):
 
@@ -40,6 +50,12 @@ def splitKeys(keys):
             #keyArray[i] = keyArray[i].decode("utf-8")
 
         return keyArray
+
+        '''
+        Split the keys received from the server into and array
+        :param keys: the string received from the server
+        :return an array of the 20 'server' keys
+        '''
         
 def encrypt_message(message, key):
 
@@ -48,3 +64,9 @@ def encrypt_message(message, key):
         # ord() return the ascii value, chr() the character related to the ascii value
         cyphertext += chr(ord(message[i]) ^ ord(key[i]))
     return cyphertext
+
+    '''
+    Can encrypt or decrypt a 64 byte strings text
+    :param message: the message to encrypt or decrypt
+    :param key: the key to use to encrypt or decrypt
+    '''
