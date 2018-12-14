@@ -2,6 +2,7 @@ import sys
 import TCP_Connection as tcp
 import UDP_communication as udp
 import encryption
+import multipart as mul
 
 def main():
     host_address = sys.argv[1]
@@ -12,6 +13,8 @@ def main():
     client_keys = encryption.splitKeys(client_keys)
     # Decoding (in a string) and printing the handshake message
     print('Received handshake data from server:', handshake)
+    print("------------------------")
+    print("Client keys :", client_keys)
     #tcp.close_socket(socket_tcp)
     CID = handshake[6:15]
     UDP_port = handshake[15:20]
@@ -20,14 +23,15 @@ def main():
     udp.connection(host_address, UDP_port, socket_udp)
     message = "Hello from "
     message += CID
-    udp.send_message(CID, UDP_port, host_address, socket_udp, message, client_keys[0])
-    received_words, EOM = udp.received_data(socket_udp, server_keys[0][1:65])
-    print(received_words)
+    udp.send_message(CID, UDP_port, host_address, socket_udp, message, client_keys[0], 0)
+    key_index_server = 0
+    key_index_client = 1
+    received_words, EOM, key_index_server = mul.receive_parts(socket_udp, server_keys, key_index_server)
+    #print(received_words)
     i=1
     while(EOM != True):
-        udp.send_message(CID, UDP_port, host_address, socket_udp, udp.reverse_message(received_words), client_keys[i])
-        #print(server_keys[i][0:64])
-        received_words, EOM = udp.received_data(socket_udp, server_keys[i][0:64])
+        key_index_client = mul.send_parts(CID, UDP_port, host_address, socket_udp, udp.reverse_message(received_words), client_keys, key_index_client)
+        received_words, EOM, key_index_server = mul.receive_parts(socket_udp, server_keys, key_index_server)
         print(received_words)
         i += 1
     tcp.close_socket(socket_udp)

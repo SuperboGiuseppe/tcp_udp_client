@@ -11,7 +11,7 @@ def connection(host_address, host_port, s, keys):
     # Connection to the server with command line arguments
     s.connect(server_address)
     # Encapsulating message in a variable, required as we need to use encode function to send 		#our message in bytes
-    message = "HELLO ENC\r\n" + keys
+    message = "HELLO ENC MUL\r\n" + keys
     # Sending the message to the server
     s.sendall(message.encode())
     # Receiving the server answer in handshake variable

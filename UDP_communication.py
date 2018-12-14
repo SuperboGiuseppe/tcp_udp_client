@@ -8,22 +8,20 @@ def create_socket():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     return s
 
-def send_message(CID, UDP_port, host_address, s, message, key):
+def send_message(CID, UDP_port, host_address, s, message, key, data_remaining):
     ack = True
     eom = False
     encrypted_message = encryption.encrypt_message(message, key)
-    #print(message)
-    data_remaining = 0
-    #print(len(message))
     length = len(message)
-    data = struct.pack('!8s??HH64s', bytes(CID, 'utf-8'), ack, eom, data_remaining, length, bytes(encrypted_message, 'utf-8'))
+    data = struct.pack('!8s??HH64s', bytes(CID, 'utf-8'), ack, eom, data_remaining, length,bytes(encrypted_message, 'utf-8'))
     s.sendto(data, (host_address, int(UDP_port)))
 
 
 def received_data(s, key):
-    print("Received data:")
+    #print("Received part:")
     received_package = struct.unpack('!8s??HH64s', s.recv(1024))
     EOM = received_package[2]
+    data_remaining = received_package[3]
     received_message = received_package[5]
     #print(received_message)
     #print(key)
@@ -31,9 +29,10 @@ def received_data(s, key):
     received_message = received_message.rstrip('h\00')
     if EOM is not True:
         words = encryption.encrypt_message(received_message, key)
+        #print(words)
     else:
         words = received_message
-    return words, EOM
+    return words, EOM, data_remaining
 
 
 def connection(host_address, UDP_port, s):
