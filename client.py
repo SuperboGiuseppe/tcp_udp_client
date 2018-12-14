@@ -5,6 +5,13 @@ import encryption
 import multipart as mul
 
 def main():
+    '''
+    Client of the project which establish first of all a TCP handshake with the server to get useful information to start
+    a messaging session by using a UDP port.
+    After the handshake there is the real messaging session where the client answer to the server with reversed version of
+    server's message until the server itself decides to stop the messaging session.
+    All the opened sockets (TCP and UDP) are closed after the server close the messaging session.
+    '''
     host_address = sys.argv[1]
     host_port = sys.argv[2]
     socket_tcp = tcp.create_socket()
@@ -12,9 +19,9 @@ def main():
     handshake = tcp.connection(host_address, host_port, socket_tcp, client_keys)
     client_keys = encryption.splitKeys(client_keys)
     # Decoding (in a string) and printing the handshake message
-    print('Received handshake data from server:', handshake)
-    print("------------------------")
-    print("Client keys :", client_keys)
+    #print('Received handshake data from server:', handshake)
+    #print("------------------------")
+    #print("Client keys :", client_keys)
     #tcp.close_socket(socket_tcp)
     CID = handshake[6:15]
     UDP_port = handshake[15:20]
